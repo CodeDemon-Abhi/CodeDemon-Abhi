@@ -1,0 +1,24 @@
+# General
+node_modules/
+.DS_Store
+dist/
+build/
+.env
+.env.*
+
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+
+# Expo/React Native
+apps/mobile/.expo/
+apps/mobile/.expo-shared/
+apps/mobile/.gradle/
+apps/mobile/android/
+apps/mobile/ios/
+*.log
+
+# Docker
+*.pid
+
