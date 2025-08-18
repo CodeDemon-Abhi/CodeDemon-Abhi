@@ -1,3 +1,67 @@
+## FitBuddy AI – AI Personal Trainer & Skin Recovery Coach (MVP)
+
+This repository contains a minimal, end-to-end MVP for FitBuddy AI:
+
+- React Native (Expo) mobile app for photo upload, habits, and viewing reports
+- Node.js Express API for orchestrating uploads, plans, and reports
+- Python FastAPI AI service (OpenCV + TensorFlow-ready) for basic analysis
+- Docker Compose for local development
+
+### Architecture (MVP)
+
+- `apps/mobile` (Expo):
+  - Photo upload (front/back), basic form for goals
+  - Displays a mock Skin Recovery Score (SRS) and analysis
+- `services/api` (Node/Express):
+  - Endpoints: `/upload`, `/report/:userId/latest`, `/plan`
+  - Calls `services/ai` for analysis
+- `services/ai` (FastAPI):
+  - Endpoint: `/analyze` accepts front/back images
+  - Returns simple rule-based analysis with placeholders for ML
+
+### Quick Start
+
+Requirements:
+- Node.js 18+
+- Python 3.10+
+- Docker + Docker Compose (optional but recommended)
+
+Local with Docker:
+
+```bash
+cd /workspace
+docker compose up --build
+```
+
+Services:
+- API: http://localhost:4000/health
+- AI: http://localhost:8000/health
+
+Mobile app:
+- See `apps/mobile/README.md` for running the Expo app.
+
+### Environment
+
+Copy environment examples and adjust values:
+
+```bash
+cp services/api/.env.example services/api/.env
+cp services/ai/.env.example services/ai/.env
+```
+
+### Security & Privacy (MVP)
+
+- Images are processed locally when running via Docker
+- For production, use secure storage (e.g., Firebase Storage), signed URLs, and encryption at rest
+- Do not log PII or image bytes; only log trace IDs
+
+### Roadmap
+
+- Replace rule-based CV with actual model
+- Add authentication (Firebase Auth)
+- Persist user data to Firestore or Supabase
+- Weekly progress overlays and habit tracker
+
 # 💫 About Me:
 Frontend architect turned on-chain engineer. Solidity? Nah. It’s Solana time.
 
