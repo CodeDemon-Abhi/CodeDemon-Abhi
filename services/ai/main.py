@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from PIL import Image
 import numpy as np
 import cv2 as cv
+import io
 
 app = FastAPI()
 
@@ -35,8 +36,10 @@ def compute_basic_skin_metrics(img: np.ndarray) -> dict:
 @app.post("/analyze")
 async def analyze(front: UploadFile = File(...), back: UploadFile = File(...)):
     try:
-        front_img = Image.open(front.file).convert("RGB")
-        back_img = Image.open(back.file).convert("RGB")
+        front_bytes = await front.read()
+        back_bytes = await back.read()
+        front_img = Image.open(io.BytesIO(front_bytes)).convert("RGB")
+        back_img = Image.open(io.BytesIO(back_bytes)).convert("RGB")
 
         front_np = cv.cvtColor(np.array(front_img), cv.COLOR_RGB2BGR)
         back_np = cv.cvtColor(np.array(back_img), cv.COLOR_RGB2BGR)
@@ -73,6 +76,15 @@ async def analyze(front: UploadFile = File(...), back: UploadFile = File(...)):
                 },
             }
         )
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+
+
+@app.post("/overlay")
+async def overlay(front: UploadFile = File(...), back: UploadFile = File(...)):
+    try:
+        # Placeholder overlay response; in a real impl, compute body alignment overlays
+        return {"message": "overlay generated", "notes": "alignment and symmetry placeholders"}
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
 

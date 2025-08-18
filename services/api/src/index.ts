@@ -3,12 +3,18 @@ import cors from 'cors';
 import multer from 'multer';
 import axios from 'axios';
 import FormData from 'form-data';
+import fs from 'fs';
+import path from 'path';
+import { store } from './store';
+import { ReportRecord } from './types';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const upload = multer({ storage: multer.memoryStorage() });
+const uploadsDir = path.resolve(process.cwd(), 'data', 'uploads');
+fs.mkdirSync(uploadsDir, { recursive: true });
+const upload = multer({ dest: uploadsDir });
 
 const PORT = parseInt(process.env.PORT || '4000', 10);
 const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://localhost:8000';
@@ -19,6 +25,8 @@ app.get('/health', (_req: Request, res: Response) => {
 
 app.post('/upload', upload.fields([{ name: 'front', maxCount: 1 }, { name: 'back', maxCount: 1 }]), async (req: Request, res: Response) => {
   try {
+    const userId = (req.body?.userId as string) || 'demo';
+    store.upsertUser(userId);
     const front = (req.files as any)?.front?.[0];
     const back = (req.files as any)?.back?.[0];
 
@@ -27,29 +35,34 @@ app.post('/upload', upload.fields([{ name: 'front', maxCount: 1 }, { name: 'back
     }
 
     const form = new FormData();
-    form.append('front', front.buffer, { filename: front.originalname, contentType: front.mimetype });
-    form.append('back', back.buffer, { filename: back.originalname, contentType: back.mimetype });
+    form.append('front', fs.createReadStream(front.path), { filename: front.originalname, contentType: front.mimetype });
+    form.append('back', fs.createReadStream(back.path), { filename: back.originalname, contentType: back.mimetype });
 
     const aiResponse = await axios.post(`${AI_SERVICE_URL}/analyze`, form, {
       headers: form.getHeaders(),
       maxBodyLength: Infinity,
     });
 
-    res.json({ analysis: aiResponse.data });
+    const analysis = aiResponse.data;
+    const report: ReportRecord = {
+      userId,
+      createdAtIso: new Date().toISOString(),
+      srs: analysis.skinRecoveryScore ?? 0,
+      analysis,
+      images: { frontPath: front.path, backPath: back.path },
+    };
+    store.addReport(report);
+    res.json({ analysis });
   } catch (error: any) {
     console.error('Upload error', error?.message);
     res.status(500).json({ error: 'Failed to analyze images' });
   }
 });
 
-app.get('/report/:userId/latest', async (_req: Request, res: Response) => {
-  // Placeholder: in MVP we return a mock report
-  res.json({
-    userId: 'demo',
-    srs: 72,
-    notes: 'Mild lower belly skin laxity; prioritize core and hydration.',
-    date: new Date().toISOString(),
-  });
+app.get('/report/:userId/latest', async (req: Request, res: Response) => {
+  const report = store.getLatestReport(req.params.userId);
+  if (!report) return res.status(404).json({ error: 'No report' });
+  res.json(report);
 });
 
 app.post('/plan', async (req: Request, res: Response) => {
@@ -64,6 +77,39 @@ app.post('/plan', async (req: Request, res: Response) => {
     habits: ['Hydration 3L/day', 'Protein 1.6–2.2 g/kg', 'Collagen + Vitamin C pre-training']
   };
   res.json(plan);
+});
+
+app.get('/reports/:userId', (req: Request, res: Response) => {
+  const limit = Number(req.query.limit || 10);
+  res.json(store.getReports(req.params.userId, limit));
+});
+
+app.post('/habits/:userId', (req: Request, res: Response) => {
+  const { dateIso, hydrationLiters, proteinGrams, collagenTaken, coreDone } = req.body || {};
+  if (!dateIso) return res.status(400).json({ error: 'dateIso required (YYYY-MM-DD)' });
+  const entry = store.upsertHabit(req.params.userId, { dateIso, hydrationLiters, proteinGrams, collagenTaken, coreDone });
+  res.json(entry);
+});
+
+app.get('/habits/:userId', (req: Request, res: Response) => {
+  res.json(store.getHabits(req.params.userId));
+});
+
+app.post('/overlay', upload.fields([{ name: 'front', maxCount: 1 }, { name: 'back', maxCount: 1 }]), async (req: Request, res: Response) => {
+  try {
+    const front = (req.files as any)?.front?.[0];
+    const back = (req.files as any)?.back?.[0];
+    if (!front || !back) return res.status(400).json({ error: 'front and back images are required' });
+
+    const form = new FormData();
+    form.append('front', fs.createReadStream(front.path), { filename: front.originalname, contentType: front.mimetype });
+    form.append('back', fs.createReadStream(back.path), { filename: back.originalname, contentType: back.mimetype });
+    const aiResponse = await axios.post(`${AI_SERVICE_URL}/overlay`, form, { headers: form.getHeaders(), maxBodyLength: Infinity });
+    res.json({ overlay: aiResponse.data });
+  } catch (e: any) {
+    console.error('Overlay error', e?.message);
+    res.status(500).json({ error: 'Failed to generate overlay' });
+  }
 });
 
 app.listen(PORT, () => {

@@ -9,6 +9,9 @@ export default function App() {
   const [back, setBack] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [userId] = useState('demo-user');
+  const [habits, setHabits] = useState({ hydrationLiters: 0, proteinGrams: 0, collagenTaken: false, coreDone: false });
 
   const pickImage = async (setter) => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -24,6 +27,7 @@ export default function App() {
     setLoading(true);
     try {
       const form = new FormData();
+      form.append('userId', userId);
       form.append('front', { uri: front.uri, name: 'front.jpg', type: 'image/jpeg' });
       form.append('back', { uri: back.uri, name: 'back.jpg', type: 'image/jpeg' });
       const response = await fetch(`${API_URL}/upload`, {
@@ -33,12 +37,25 @@ export default function App() {
       });
       const json = await response.json();
       setResult(json.analysis || json);
+      await fetchHistory();
     } catch (e) {
       setResult({ error: String(e) });
     } finally {
       setLoading(false);
     }
   };
+
+  const fetchHistory = async () => {
+    try {
+      const resp = await fetch(`${API_URL}/reports/${userId}?limit=5`);
+      const json = await resp.json();
+      setHistory(json || []);
+    } catch {}
+  };
+
+  React.useEffect(() => {
+    fetchHistory();
+  }, []);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -69,6 +86,44 @@ export default function App() {
             <Text>Back: {result.back?.assessment}</Text>
           </View>
         )}
+
+        {history?.length > 0 && (
+          <View style={styles.result}>
+            <Text style={styles.resultTitle}>Recent Reports</Text>
+            {history.map((r, idx) => (
+              <Text key={idx} style={{ color: '#b0b8c6' }}>{new Date(r.createdAtIso).toLocaleString()} — SRS {r.srs}</Text>
+            ))}
+          </View>
+        )}
+
+        <View style={styles.result}>
+          <Text style={styles.resultTitle}>Daily Habits</Text>
+          <Text style={{ color: '#b0b8c6' }}>Hydration (L): {habits.hydrationLiters}</Text>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <Button title="+0.5L" onPress={() => setHabits(h => ({ ...h, hydrationLiters: +(h.hydrationLiters + 0.5).toFixed(1) }))} />
+            <Button title="Reset" onPress={() => setHabits(h => ({ ...h, hydrationLiters: 0 }))} />
+          </View>
+          <Text style={{ color: '#b0b8c6', marginTop: 8 }}>Protein (g): {habits.proteinGrams}</Text>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <Button title="+20g" onPress={() => setHabits(h => ({ ...h, proteinGrams: h.proteinGrams + 20 }))} />
+            <Button title="Reset" onPress={() => setHabits(h => ({ ...h, proteinGrams: 0 }))} />
+          </View>
+          <View style={{ height: 8 }} />
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <Button title={habits.collagenTaken ? 'Collagen ✓' : 'Collagen'} onPress={() => setHabits(h => ({ ...h, collagenTaken: !h.collagenTaken }))} />
+            <Button title={habits.coreDone ? 'Core ✓' : 'Core'} onPress={() => setHabits(h => ({ ...h, coreDone: !h.coreDone }))} />
+          </View>
+          <View style={{ height: 8 }} />
+          <Button title="Save Habits" onPress={async () => {
+            const today = new Date();
+            const dateIso = today.toISOString().slice(0,10);
+            await fetch(`${API_URL}/habits/${userId}`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ dateIso, ...habits })
+            });
+          }} />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
