@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Button, Image, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
-const API_URL = 'http://localhost:4000';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:4000';
 
 export default function App() {
   const [front, setFront] = useState(null);

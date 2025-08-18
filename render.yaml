@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: fitbuddy-api
+    env: docker
+    plan: free
+    dockerfilePath: services/api/Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: AI_SERVICE_URL
+        value: https://fitbuddy-ai-xxxx.onrender.com
+      - key: PORT
+        value: 4000
+
+  - type: web
+    name: fitbuddy-ai
+    env: docker
+    plan: free
+    dockerfilePath: services/ai/Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 8000
