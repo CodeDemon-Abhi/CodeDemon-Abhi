@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitBuddy AI – Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark">FB</div>
+      <div class="brand-text">
+        <div class="brand-title">FitBuddy AI</div>
+        <div class="brand-sub">AI Personal Trainer & Skin Recovery Coach</div>
+      </div>
+    </div>
+    <nav class="top-nav" aria-label="Primary Navigation">
+      <button class="nav-btn is-active" data-screen="onboarding">Onboarding</button>
+      <button class="nav-btn" data-screen="dashboard">Dashboard</button>
+      <button class="nav-btn" data-screen="scan">AI Scan</button>
+      <button class="nav-btn" data-screen="skin">Skin Report</button>
+      <button class="nav-btn" data-screen="plan">Plan</button>
+      <button class="nav-btn" data-screen="habits">Habits</button>
+      <button class="nav-btn" data-screen="progress">Progress</button>
+      <button class="nav-btn" data-screen="settings">Settings</button>
+    </nav>
+  </header>
+
+  <main class="main">
+    <aside class="info">
+      <h2>Preview Guide</h2>
+      <ul>
+        <li>Use the navigation to switch screens</li>
+        <li>This is a static prototype for product/UX review</li>
+        <li>Intended final stack: React Native + Expo, Node/Express, Python CV</li>
+      </ul>
+      <div class="legend">
+        <div class="legend-item"><span class="swatch swatch-primary"></span>Primary action</div>
+        <div class="legend-item"><span class="swatch swatch-muted"></span>Secondary action</div>
+        <div class="legend-item"><span class="swatch swatch-success"></span>Success</div>
+        <div class="legend-item"><span class="swatch swatch-warning"></span>Attention</div>
+      </div>
+    </aside>
+
+    <section class="device">
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="dots"><span></span><span></span><span></span></div>
+      </div>
+
+      <div class="screen is-active" id="screen-onboarding" role="region" aria-label="Onboarding">
+        <div class="hero">
+          <div class="hero-ring"></div>
+          <div class="hero-core">FB</div>
+        </div>
+        <h1>Meet your AI trainer & skin coach</h1>
+        <p class="sub">Personalized workouts, body scans, and a Skin Recovery Score to track firmness.</p>
+        <div class="pill-list">
+          <span class="pill">AI Body Scan</span>
+          <span class="pill">Custom Workouts</span>
+          <span class="pill">Skin Recovery</span>
+        </div>
+        <div class="cta-row">
+          <button class="btn btn-primary" data-screen="scan">Start Body Scan</button>
+          <button class="btn btn-muted" data-screen="dashboard">Explore App</button>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-dashboard" role="region" aria-label="Dashboard">
+        <div class="app-bar">
+          <div>
+            <div class="hello">Welcome back</div>
+            <div class="user">Alex</div>
+          </div>
+          <button class="chip">SRS 72</button>
+        </div>
+
+        <div class="card srs">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">Skin Recovery Score</div>
+              <div class="title">72</div>
+            </div>
+            <div class="spark">+3 this week</div>
+          </div>
+          <div class="meter">
+            <div class="meter-bar" style="width:72%"></div>
+          </div>
+          <div class="meter-legend">
+            <span>Low</span><span>Medium</span><span>High</span>
+          </div>
+        </div>
+
+        <div class="card today">
+          <div class="card-header">
+            <div>
+              <div class="eyebrow">Today</div>
+              <div class="title">Core + Posture</div>
+            </div>
+            <button class="btn btn-small btn-primary" data-screen="plan">Start</button>
+          </div>
+          <ul class="checklist">
+            <li><input type="checkbox"/> Hollow body holds – 3 x 30s</li>
+            <li><input type="checkbox"/> Dead bugs – 3 x 10/side</li>
+            <li><input type="checkbox"/> Pallof press – 3 x 12/side</li>
+          </ul>
+        </div>
+
+        <div class="grid">
+          <div class="card habit">
+            <div class="eyebrow">Hydration</div>
+            <div class="title">2.1 L / 3.0 L</div>
+            <div class="meter small"><div class="meter-bar" style="width:70%"></div></div>
+          </div>
+          <div class="card habit">
+            <div class="eyebrow">Protein</div>
+            <div class="title">85g / 130g</div>
+            <div class="meter small"><div class="meter-bar" style="width:65%"></div></div>
+          </div>
+          <div class="card habit">
+            <div class="eyebrow">Collagen</div>
+            <div class="title">10g / 15g</div>
+            <div class="meter small"><div class="meter-bar" style="width:66%"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-scan" role="region" aria-label="AI Scan">
+        <div class="app-bar">
+          <div class="title-lg">AI Body Scan</div>
+          <button class="btn btn-small btn-muted" data-screen="dashboard">Skip</button>
+        </div>
+
+        <div class="upload-grid">
+          <div class="upload">
+            <div class="upload-box">
+              <div class="upload-ghost">Front</div>
+            </div>
+            <button class="btn btn-muted">Upload Front</button>
+          </div>
+          <div class="upload">
+            <div class="upload-box">
+              <div class="upload-ghost">Back</div>
+            </div>
+            <button class="btn btn-muted">Upload Back</button>
+          </div>
+        </div>
+        <div class="hint">Tip: Use even lighting, neutral stance, arms relaxed.</div>
+        <div class="cta-row">
+          <button class="btn btn-primary" data-screen="skin">Analyze</button>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-skin" role="region" aria-label="Skin Status Report">
+        <div class="app-bar">
+          <div>
+            <div class="eyebrow">Skin Status</div>
+            <div class="title-lg">Recovery Report</div>
+          </div>
+          <button class="btn btn-small btn-muted" data-screen="progress">Compare</button>
+        </div>
+
+        <div class="card srs ring">
+          <div class="ring-wrap">
+            <svg viewBox="0 0 120 120" class="ring-svg" aria-label="Skin Recovery Score">
+              <circle cx="60" cy="60" r="52" class="ring-bg"/>
+              <circle cx="60" cy="60" r="52" class="ring-fg" stroke-dasharray="326" stroke-dashoffset="91"></circle>
+              <text x="60" y="64" text-anchor="middle" class="ring-text">72</text>
+            </svg>
+          </div>
+          <div class="ring-legend">
+            <div>Elasticity: 68</div>
+            <div>Collagen proxy: 71</div>
+            <div>Firmness trend: +3</div>
+          </div>
+        </div>
+
+        <div class="card insights">
+          <div class="card-header">
+            <div class="title">Insights</div>
+          </div>
+          <ul class="bullets">
+            <li>Lower abdomen: mix of residual fat and laxity (approx 60/40)</li>
+            <li>Mild pec asymmetry: right > left by ~8%</li>
+            <li>Skin responds well to hydration & protein consistency</li>
+          </ul>
+        </div>
+
+        <div class="grid">
+          <div class="card recs">
+            <div class="eyebrow">Natural supports</div>
+            <ul class="bullets small">
+              <li>2.5–3.0 L water/day</li>
+              <li>1.6–2.2 g protein/kg</li>
+              <li>Hydrolyzed collagen 10–15 g</li>
+            </ul>
+          </div>
+          <div class="card recs">
+            <div class="eyebrow">Non-surgical options</div>
+            <ul class="bullets small">
+              <li>RF microneedling</li>
+              <li>Radiofrequency skin tightening</li>
+              <li>Consult for excess skin</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-plan" role="region" aria-label="Workout Plan">
+        <div class="app-bar">
+          <div>
+            <div class="eyebrow">Plan</div>
+            <div class="title-lg">Core + Symmetry</div>
+          </div>
+          <button class="btn btn-small btn-primary">Start Workout</button>
+        </div>
+
+        <div class="plan-day">
+          <div class="plan-header">Day 1 · Core Stability</div>
+          <ul class="plan-list">
+            <li>
+              <div>
+                <div class="plan-name">Dead bug</div>
+                <div class="plan-sub">3 x 10/side · Tempo 2-0-2</div>
+              </div>
+              <button class="chip">Log</button>
+            </li>
+            <li>
+              <div>
+                <div class="plan-name">Hollow hold</div>
+                <div class="plan-sub">3 x 30s · 60s rest</div>
+              </div>
+              <button class="chip">Log</button>
+            </li>
+            <li>
+              <div>
+                <div class="plan-name">Pallof press</div>
+                <div class="plan-sub">3 x 12/side · Band</div>
+              </div>
+              <button class="chip">Log</button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="plan-day">
+          <div class="plan-header">Day 2 · Upper Symmetry</div>
+          <ul class="plan-list">
+            <li>
+              <div>
+                <div class="plan-name">Single-arm cable press</div>
+                <div class="plan-sub">4 x 10/side</div>
+              </div>
+              <button class="chip">Log</button>
+            </li>
+            <li>
+              <div>
+                <div class="plan-name">Chest supported row</div>
+                <div class="plan-sub">4 x 10</div>
+              </div>
+              <button class="chip">Log</button>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-habits" role="region" aria-label="Habits">
+        <div class="app-bar">
+          <div>
+            <div class="eyebrow">Daily Habits</div>
+            <div class="title-lg">Consistency Tracker</div>
+          </div>
+          <button class="btn btn-small btn-muted">Edit</button>
+        </div>
+
+        <ul class="habit-list">
+          <li>
+            <div class="habit-text">
+              <div class="plan-name">Hydration</div>
+              <div class="plan-sub">Goal 3.0 L</div>
+            </div>
+            <div class="meter tiny"><div class="meter-bar" style="width:70%"></div></div>
+          </li>
+          <li>
+            <div class="habit-text">
+              <div class="plan-name">Protein</div>
+              <div class="plan-sub">130 g</div>
+            </div>
+            <div class="meter tiny"><div class="meter-bar" style="width:62%"></div></div>
+          </li>
+          <li>
+            <div class="habit-text">
+              <div class="plan-name">Collagen</div>
+              <div class="plan-sub">15 g</div>
+            </div>
+            <div class="meter tiny"><div class="meter-bar" style="width:66%"></div></div>
+          </li>
+          <li>
+            <div class="habit-text">
+              <div class="plan-name">Sleep</div>
+              <div class="plan-sub">7.5 h</div>
+            </div>
+            <div class="meter tiny"><div class="meter-bar" style="width:80%"></div></div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="screen" id="screen-progress" role="region" aria-label="Progress">
+        <div class="app-bar">
+          <div>
+            <div class="eyebrow">Progress</div>
+            <div class="title-lg">Week-over-Week</div>
+          </div>
+          <button class="btn btn-small btn-muted" data-screen="scan">New Scan</button>
+        </div>
+
+        <div class="compare">
+          <div class="compare-frame">
+            <div class="compare-layer layer-a">Front - Week 1</div>
+            <div class="compare-layer layer-b" style="opacity:0.5">Front - Week 4</div>
+          </div>
+          <input type="range" min="0" max="100" value="50" class="slider" aria-label="Overlay slider" />
+          <div class="compare-legend">
+            <span class="chip">Overlay</span>
+            <span class="chip">Side-by-side</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="screen-settings" role="region" aria-label="Settings">
+        <div class="app-bar">
+          <div>
+            <div class="eyebrow">Settings</div>
+            <div class="title-lg">Profile</div>
+          </div>
+          <button class="btn btn-small btn-muted" data-screen="dashboard">Done</button>
+        </div>
+
+        <div class="card form">
+          <label>Goal
+            <select>
+              <option>Fat loss + Skin firming</option>
+              <option>Muscle gain + Symmetry</option>
+              <option>Maintenance</option>
+            </select>
+          </label>
+          <label>Units
+            <select>
+              <option>Metric</option>
+              <option>Imperial</option>
+            </select>
+          </label>
+          <label>Notifications
+            <select>
+              <option>Essential only</option>
+              <option>All</option>
+              <option>Off</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <footer class="tabbar">
+        <button class="tab" data-screen="dashboard">Home</button>
+        <button class="tab" data-screen="scan">Scan</button>
+        <button class="tab is-primary" data-screen="plan">Plan</button>
+        <button class="tab" data-screen="habits">Habits</button>
+        <button class="tab" data-screen="settings">Settings</button>
+      </footer>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
+
